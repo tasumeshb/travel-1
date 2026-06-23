@@ -1,0 +1,37 @@
+[2026-05-31 17:22:02] production.ERROR: Your configuration files are not serializable. {"exception":"[object] (LogicException(code: 0): Your configuration files are not serializable. at /var/www/html/travel/vendor/laravel/framework/src/Illuminate/Foundation/Console/ConfigCacheCommand.php:84)
+[stacktrace]
+#0 /var/www/html/travel/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Foundation\\Console\\ConfigCacheCommand->handle()
+#1 /var/www/html/travel/vendor/laravel/framework/src/Illuminate/Container/Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#2 /var/www/html/travel/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+#3 /var/www/html/travel/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#4 /var/www/html/travel/vendor/laravel/framework/src/Illuminate/Container/Container.php(661): Illuminate\\Container\\BoundMethod::call()
+#5 /var/www/html/travel/vendor/laravel/framework/src/Illuminate/Console/Command.php(183): Illuminate\\Container\\Container->call()
+#6 /var/www/html/travel/vendor/symfony/console/Command/Command.php(326): Illuminate\\Console\\Command->execute()
+#7 /var/www/html/travel/vendor/laravel/framework/src/Illuminate/Console/Command.php(152): Symfony\\Component\\Console\\Command\\Command->run()
+#8 /var/www/html/travel/vendor/symfony/console/Application.php(1063): Illuminate\\Console\\Command->run()
+#9 /var/www/html/travel/vendor/symfony/console/Application.php(320): Symfony\\Component\\Console\\Application->doRunCommand()
+#10 /var/www/html/travel/vendor/symfony/console/Application.php(174): Symfony\\Component\\Console\\Application->doRun()
+#11 /var/www/html/travel/vendor/laravel/framework/src/Illuminate/Console/Application.php(102): Symfony\\Component\\Console\\Application->run()
+#12 /var/www/html/travel/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(155): Illuminate\\Console\\Application->run()
+#13 /var/www/html/travel/artisan(38): Illuminate\\Foundation\\Console\\Kernel->handle()
+#14 {main}
+
+[previous exception] [object] (Error(code: 0): Call to undefined method Illuminate\\Validation\\Rules\\Password::__set_state() at /var/www/html/travel/bootstrap/cache/config.php:933)
+[stacktrace]
+#0 /var/www/html/travel/vendor/laravel/framework/src/Illuminate/Foundation/Console/ConfigCacheCommand.php(80): require()
+#1 /var/www/html/travel/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Foundation\\Console\\ConfigCacheCommand->handle()
+#2 /var/www/html/travel/vendor/laravel/framework/src/Illuminate/Container/Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#3 /var/www/html/travel/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+#4 /var/www/html/travel/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#5 /var/www/html/travel/vendor/laravel/framework/src/Illuminate/Container/Container.php(661): Illuminate\\Container\\BoundMethod::call()
+#6 /var/www/html/travel/vendor/laravel/framework/src/Illuminate/Console/Command.php(183): Illuminate\\Container\\Container->call()
+#7 /var/www/html/travel/vendor/symfony/console/Command/Command.php(326): Illuminate\\Console\\Command->execute()
+#8 /var/www/html/travel/vendor/laravel/framework/src/Illuminate/Console/Command.php(152): Symfony\\Component\\Console\\Command\\Command->run()
+#9 /var/www/html/travel/vendor/symfony/console/Application.php(1063): Illuminate\\Console\\Command->run()
+#10 /var/www/html/travel/vendor/symfony/console/Application.php(320): Symfony\\Component\\Console\\Application->doRunCommand()
+#11 /var/www/html/travel/vendor/symfony/console/Application.php(174): Symfony\\Component\\Console\\Application->doRun()
+#12 /var/www/html/travel/vendor/laravel/framework/src/Illuminate/Console/Application.php(102): Symfony\\Component\\Console\\Application->run()
+#13 /var/www/html/travel/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(155): Illuminate\\Console\\Application->run()
+#14 /var/www/html/travel/artisan(38): Illuminate\\Foundation\\Console\\Kernel->handle()
+#15 {main}
+"} 

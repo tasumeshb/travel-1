@@ -1,0 +1,10 @@
+# One URL per line — same order as homepage slider images.
+# Internal pages: /tour  or  tour  (becomes /tour)
+# Same site: https://travelstepsindia.com/tour  (opens in same tab)
+# Other sites: https://www.client-partner.com  (opens new tab)
+#
+# Example:
+# https://travelstepsindia.com/tour
+# https://travelstepsindia.com/hotel
+# /car
+# https://www.partner-website.com

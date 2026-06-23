@@ -1,0 +1,71 @@
+.bravo-intl-phone,
+.iti {
+    width: 100%;
+    display: block;
+}
+
+.bravo-intl-phone.iti input[type="tel"],
+.iti input[type="tel"] {
+    width: 100%;
+}
+
+.iti--separate-dial-code .iti__selected-flag {
+    border-radius: 0.25rem 0 0 0.25rem;
+    background-color: #f8f9fa;
+}
+
+.form-group .iti--separate-dial-code input,
+.iti--separate-dial-code input[type="tel"] {
+    padding-left: 92px !important;
+}
+
+.iti__country-list {
+    z-index: 10060;
+}
+
+.modal .iti__country-list {
+    z-index: 10070;
+}
+
+:root {
+    --iti-path-flags-1x: url("https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.10/build/img/flags.png?1");
+    --iti-path-flags-2x: url("https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.10/build/img/flags@2x.png?1");
+}
+
+.bravo-phone-display {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    vertical-align: middle;
+    line-height: 1.4;
+}
+
+.bravo-phone-display .iti__flag {
+    display: inline-block;
+    flex-shrink: 0;
+    transform: scale(1.15);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.bravo-phone-display a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.bravo-phone-display a:hover {
+    text-decoration: underline;
+}
+
+.meta-info.style1 .bravo-phone-display,
+.meta-info .bravo-phone-display,
+.bravo-list-vendor .bravo-phone-display {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    vertical-align: middle;
+}
+
+.meta-info.style1 li .val .bravo-phone-display .iti__flag {
+    flex-shrink: 0;
+}

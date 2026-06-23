@@ -1,0 +1,51 @@
+<style>
+.bravo_wrap .page-template-content .bravo-form-search-all .g-form-control .nav-tabs li a {
+    padding:7px 10px !important;
+}
+</style>
+
+@if(empty($hide_form_search))
+    <div class="g-form-control"  style="position:relative !important; top:100px !important;"> 
+        <ul class="nav nav-tabs" role="tablist"> 
+            @if(!empty($service_types))
+    @php $number = 0; @endphp
+    @foreach ($service_types as $key => $service_type)
+        @if($service_type != "flight")
+            @php
+                $allServices = get_bookable_services(); 
+                if (empty($allServices[$service_type])) continue;
+                $module = new $allServices[$service_type];  
+            @endphp
+            <li role="bravo_{{$service_type}}"> 
+                <a href="#bravo_{{$service_type}}" class="@if($number == 0) active @endif" aria-controls="bravo_{{$service_type}}" role="tab" data-toggle="tab">
+                    <i class="{{ $module->getServiceIconFeatured() }}"></i> 
+                    @if(!empty($service_types_label))
+                        {{$service_types_label[$key] }}
+                    @else
+                        {{ !empty($modelBlock["title_for_".$service_type]) ? $modelBlock["title_for_".$service_type] : $module->getModelName() }}
+                    @endif 
+                </a>
+            </li>
+            @php $number++; @endphp
+        @endif
+    @endforeach
+  @endif 
+        </ul>
+        <div class="tab-content">
+            @if(!empty($service_types))
+                @php $number = 0; @endphp
+                @foreach ($service_types as $service_type)
+                    @php
+                        $allServices = get_bookable_services();
+                        if(empty($allServices[$service_type])) continue;
+                        $module = new $allServices[$service_type];
+                    @endphp
+                    <div role="tabpanel" class="tab-pane @if($number == 0) active @endif" id="bravo_{{$service_type}}">
+                        @include(ucfirst($service_type).'::frontend.layouts.search.form-search')
+                    </div>
+                    @php $number++; @endphp
+                @endforeach
+            @endif
+        </div>
+    </div>
+@endif

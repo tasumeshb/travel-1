@@ -1,0 +1,65 @@
+/* Detail page: use profile page sidebar styling without owner-info overrides */
+.bravo_detail_space .bravo-detail-profile-aside {
+    margin-bottom: 24px;
+}
+
+.bravo_detail_space .bravo-detail-profile-aside .profile-summary {
+    margin-bottom: 0;
+}
+
+.bravo_detail_space .bravo-detail-profile-aside .bravo-detail-profile-actions {
+    margin-top: 0;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.bravo_detail_space .bravo-detail-profile-aside .bravo-detail-profile-actions .btn {
+    font-size: 14px;
+    font-weight: 500;
+    padding: 10px 20px;
+}
+
+.bravo_detail_space .bravo-detail-profile-aside .bravo-detail-profile-actions .btn.mb-2 {
+    margin-bottom: 10px;
+}
+
+.bravo_detail_space .bravo-detail-profile-aside + .bravo-detail-external-links .profile-summary {
+    margin-top: 0;
+}
+
+/* Vendor / host sidebar contact block — consistent label + value alignment */
+.bravo-detail-profile-aside .profile-summary .meta-info.style1 li,
+.bravo-vendor-profile-sidebar .meta-info.style1 li {
+    margin-bottom: 14px;
+}
+
+.bravo-detail-profile-aside .profile-summary .meta-info.style1 li .label,
+.bravo-vendor-profile-sidebar .meta-info.style1 li .label {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.bravo-detail-profile-aside .profile-summary .meta-info.style1 li .val,
+.bravo-vendor-profile-sidebar .meta-info.style1 li .val {
+    display: block;
+    line-height: 1.5;
+}
+
+.bravo-detail-profile-aside .profile-summary .meta-info.style1 li.user_address .user-address-google-link,
+.bravo-vendor-profile-sidebar .meta-info.style1 li.user_address .user-address-google-link {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.bravo-detail-profile-aside .profile-summary .meta-info.style1 li.user_address .user-address-google-link:hover,
+.bravo-vendor-profile-sidebar .meta-info.style1 li.user_address .user-address-google-link:hover {
+    color: #5191FA;
+    text-decoration: underline;
+}
+
+.bravo-detail-profile-aside .profile-summary .profile-social-links,
+.bravo-vendor-profile-sidebar .profile-social-links {
+    text-align: center;
+    margin-top: 12px;
+}

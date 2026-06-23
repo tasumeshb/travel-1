@@ -1,0 +1,8 @@
+[2026-05-27 09:18:07] production.ERROR: Allowed memory size of 3221225472 bytes exhausted (tried to allocate 4096 bytes) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Allowed memory size of 3221225472 bytes exhausted (tried to allocate 4096 bytes) at /home/u311034922/domains/travelstepsindia.com/public_html/modules/Event/Models/Event.php:1095)
+[stacktrace]
+#0 {main}
+"} 
+[2026-05-27 11:31:32] production.ERROR: Allowed memory size of 3221225472 bytes exhausted (tried to allocate 4096 bytes) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Allowed memory size of 3221225472 bytes exhausted (tried to allocate 4096 bytes) at /home/u311034922/domains/travelstepsindia.com/public_html/modules/Event/Models/Event.php:1095)
+[stacktrace]
+#0 {main}
+"} 

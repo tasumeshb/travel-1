@@ -1,0 +1,2 @@
+<?php echo $__env->make('Booking::partials.external-links-fields', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+<?php /**PATH /var/www/html/travel/modules/Event/Views/admin/event/booking_url.blade.php ENDPATH**/ ?>
