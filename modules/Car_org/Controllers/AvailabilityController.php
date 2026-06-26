@@ -110,7 +110,7 @@ class AvailabilityController extends FrontendController{
             $date = [
                 'id'=>rand(0,999),
                 'active'=>0,
-                'price'=>(!empty($car->sale_price) and $car->sale_price > 0 and $car->sale_price < $car->price) ? $car->sale_price : $car->price,
+                'price'=>$car->effectivePriceInMain(),
                 'is_instant'=>$car->is_instant,
                 'is_default'=>true,
                 'textColor'=>'#2791fe'
@@ -142,7 +142,7 @@ class AvailabilityController extends FrontendController{
                 $row->textColor = '#2791fe';
                 $price = $row->price;
                 if(empty($price)){
-                    $price = (!empty($car->sale_price) and $car->sale_price > 0 and $car->sale_price < $car->price) ? $car->sale_price : $car->price;
+                    $price = $car->effectivePriceInMain();
                 }
                 $row->title = $row->event = format_money($price).' x '.$row->number;
                 if(!$is_single) {

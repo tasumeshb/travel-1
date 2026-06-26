@@ -205,11 +205,74 @@ ul, ol {
                             font-weight: 500;
                             font-size: 18px;
 
+                            &:has(a) {
+                                display: flex;
+                                flex-wrap: nowrap;
+                                align-items: center;
+                                gap: 6px;
+                            }
+
                             a {
-                                margin-right: 20px;
+                                display: inline-flex;
+                                flex-shrink: 0;
+                                align-items: center;
+                                justify-content: center;
+                                width: 30px;
+                                height: 30px;
+                                margin-right: 0;
+                                margin-bottom: 0;
+                                border-radius: 4px;
+                                border: 1px solid transparent;
                                 text-decoration: none;
-                                i{
-                                    color: #1a2b48;
+                                vertical-align: middle;
+                                transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+
+                                i {
+                                    color: #fff;
+                                    font-size: 14px;
+                                    line-height: 1;
+                                }
+
+                                &:hover {
+                                    transform: translateY(-1px);
+                                    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+                                    opacity: 0.95;
+                                }
+
+                                &:has(.icofont-facebook),
+                                &:has(.fa-facebook),
+                                &.social-facebook {
+                                    background: #1877F2;
+                                    border-color: #1877F2;
+                                }
+
+                                &:has(.icofont-youtube),
+                                &:has(.icofont-youtube-play),
+                                &:has(.fa-youtube),
+                                &.social-youtube {
+                                    background: #FF0000;
+                                    border-color: #FF0000;
+                                }
+
+                                &:has(.icofont-instagram),
+                                &:has(.fa-instagram),
+                                &.social-instagram {
+                                    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+                                    border-color: #d6249f;
+                                }
+
+                                &:has(.icofont-twitter),
+                                &:has(.fa-twitter),
+                                &.social-twitter {
+                                    background: #1DA1F2;
+                                    border-color: #1DA1F2;
+                                }
+
+                                &:has(.icofont-linkedin),
+                                &:has(.fa-linkedin),
+                                &.social-linkedin {
+                                    background: #0A66C2;
+                                    border-color: #0A66C2;
                                 }
                             }
 

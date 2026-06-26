@@ -33,6 +33,23 @@
     margin-bottom: 14px;
 }
 
+.bravo-detail-profile-aside .profile-summary .meta-info.style1,
+.bravo-vendor-profile-sidebar .meta-info.style1 {
+    margin-bottom: 0;
+}
+
+.bravo-detail-profile-aside .profile-summary .meta-info.style1 li:last-child,
+.bravo-vendor-profile-sidebar .meta-info.style1 li:last-child {
+    margin-bottom: 0;
+}
+
+.bravo-detail-profile-aside .profile-summary .profile-contact-divider,
+.bravo-vendor-profile-sidebar .profile-contact-divider {
+    margin: 14px 0;
+    border: 0;
+    border-top: 1px solid #e4e4e4;
+}
+
 .bravo-detail-profile-aside .profile-summary .meta-info.style1 li .label,
 .bravo-vendor-profile-sidebar .meta-info.style1 li .label {
     display: block;
@@ -62,4 +79,61 @@
 .bravo-vendor-profile-sidebar .profile-social-links {
     text-align: center;
     margin-top: 12px;
+    font-size: 16px;
+}
+
+.bravo-detail-profile-aside .profile-summary .profile-social-links a.social-link,
+.bravo-vendor-profile-sidebar .profile-social-links a.social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    margin: 0 4px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.bravo-detail-profile-aside .profile-summary .profile-social-links a.social-link i,
+.bravo-vendor-profile-sidebar .profile-social-links a.social-link i {
+    color: #fff;
+}
+
+.bravo-detail-profile-aside .profile-summary .profile-social-links a.social-link:hover,
+.bravo-vendor-profile-sidebar .profile-social-links a.social-link:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    opacity: 0.95;
+}
+
+.bravo-detail-profile-aside .profile-summary .profile-social-links a.social-facebook,
+.bravo-vendor-profile-sidebar .profile-social-links a.social-facebook {
+    background: #1877F2;
+    border-color: #1877F2;
+}
+
+.bravo-detail-profile-aside .profile-summary .profile-social-links a.social-youtube,
+.bravo-vendor-profile-sidebar .profile-social-links a.social-youtube {
+    background: #FF0000;
+    border-color: #FF0000;
+}
+
+.bravo-detail-profile-aside .profile-summary .profile-social-links a.social-instagram,
+.bravo-vendor-profile-sidebar .profile-social-links a.social-instagram {
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    border-color: #d6249f;
+}
+
+.bravo-detail-profile-aside .profile-summary .profile-social-links a.social-twitter,
+.bravo-vendor-profile-sidebar .profile-social-links a.social-twitter {
+    background: #1DA1F2;
+    border-color: #1DA1F2;
+}
+
+.bravo-detail-profile-aside .profile-summary .profile-social-links a.social-linkedin,
+.bravo-vendor-profile-sidebar .profile-social-links a.social-linkedin {
+    background: #0A66C2;
+    border-color: #0A66C2;
 }

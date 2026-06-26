@@ -2,6 +2,7 @@
 namespace Modules\Space\Blocks;
 
 use Modules\Template\Blocks\BaseBlock;
+use Modules\Template\Helpers\ListBlockHelper;
 use Modules\Space\Models\Space;
 use Modules\Location\Models\Location;
 
@@ -123,6 +124,7 @@ class ListSpace extends BaseBlock
                         'pre_selected' => 1
                     ])
                 ],
+                ListBlockHelper::dailyRotationSetting(),
             ],
             'category' => __("Service Space")
         ];
@@ -152,8 +154,8 @@ class ListSpace extends BaseBlock
     public function query($model)
     {
         $listSpace = $this->spaceClass->search($model);
-        $limit = $model['number'] ?? 5;
-        return $listSpace->paginate($limit);
+        return ListBlockHelper::paginateList($listSpace, $model);
+    }
 
         /*$model_space = Space::select("bravo_spaces.*")->with([
             'location',
@@ -185,5 +187,4 @@ class ListSpace extends BaseBlock
         $model_space->with('location');
         $model_space->groupBy("bravo_spaces.id");
         return $model_space->limit($model['number'])->get();*/
-    }
 }

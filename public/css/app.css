@@ -8092,12 +8092,67 @@ ul, ol {
   font-weight: 500;
   font-size: 18px;
 }
+.bravo_wrap .bravo_footer .main-footer .nav-footer .context .contact .sub:has(a) {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 6px;
+}
 .bravo_wrap .bravo_footer .main-footer .nav-footer .context .contact .sub a {
-  margin-right: 20px;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  margin-right: 0;
+  margin-bottom: 0;
+  border-radius: 4px;
+  border: 1px solid transparent;
   text-decoration: none;
+  vertical-align: middle;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+.bravo_wrap .bravo_footer .main-footer .nav-footer .context .contact .sub a:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  opacity: 0.95;
 }
 .bravo_wrap .bravo_footer .main-footer .nav-footer .context .contact .sub a i {
-  color: #1a2b48;
+  color: #fff;
+  font-size: 14px;
+  line-height: 1;
+}
+.bravo_wrap .bravo_footer .main-footer .nav-footer .context .contact .sub a:has(.icofont-facebook),
+.bravo_wrap .bravo_footer .main-footer .nav-footer .context .contact .sub a:has(.fa-facebook),
+.bravo_wrap .bravo_footer .main-footer .nav-footer .context .contact .sub a.social-facebook {
+  background: #1877F2;
+  border-color: #1877F2;
+}
+.bravo_wrap .bravo_footer .main-footer .nav-footer .context .contact .sub a:has(.icofont-youtube),
+.bravo_wrap .bravo_footer .main-footer .nav-footer .context .contact .sub a:has(.icofont-youtube-play),
+.bravo_wrap .bravo_footer .main-footer .nav-footer .context .contact .sub a:has(.fa-youtube),
+.bravo_wrap .bravo_footer .main-footer .nav-footer .context .contact .sub a.social-youtube {
+  background: #FF0000;
+  border-color: #FF0000;
+}
+.bravo_wrap .bravo_footer .main-footer .nav-footer .context .contact .sub a:has(.icofont-instagram),
+.bravo_wrap .bravo_footer .main-footer .nav-footer .context .contact .sub a:has(.fa-instagram),
+.bravo_wrap .bravo_footer .main-footer .nav-footer .context .contact .sub a.social-instagram {
+  background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+  border-color: #d6249f;
+}
+.bravo_wrap .bravo_footer .main-footer .nav-footer .context .contact .sub a:has(.icofont-twitter),
+.bravo_wrap .bravo_footer .main-footer .nav-footer .context .contact .sub a:has(.fa-twitter),
+.bravo_wrap .bravo_footer .main-footer .nav-footer .context .contact .sub a.social-twitter {
+  background: #1DA1F2;
+  border-color: #1DA1F2;
+}
+.bravo_wrap .bravo_footer .main-footer .nav-footer .context .contact .sub a:has(.icofont-linkedin),
+.bravo_wrap .bravo_footer .main-footer .nav-footer .context .contact .sub a:has(.fa-linkedin),
+.bravo_wrap .bravo_footer .main-footer .nav-footer .context .contact .sub a.social-linkedin {
+  background: #0A66C2;
+  border-color: #0A66C2;
 }
 .bravo_wrap .bravo_footer .copy-right {
   border-top: 1px solid #EAEEF3;

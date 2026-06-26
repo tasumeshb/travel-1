@@ -370,7 +370,7 @@ class Boat extends Bookable
         $allDates = [];
         if($type == 'per_hour'){
             $start_date =  date('Y-m-d' , strtotime($start_date_time));
-            $base_price = $this->price_per_hour;
+            $base_price = $this->priceInMain('price_per_hour');
             $allDates[$start_date] = [
                 'number'=>$this->number,
                 'price'=>$base_price * $hour,
@@ -382,7 +382,7 @@ class Boat extends Bookable
                 {
                     $allDates[$start_date] = [
                         'number'=>$date->number,
-                        'price'=>$date->price_per_hour * $hour,
+                        'price'=>service_price_amount_in_main($date, 'price_per_hour', $this) * $hour,
                         'status'=>$date->active
                     ];
                 }
@@ -392,7 +392,7 @@ class Boat extends Bookable
             }
         }
         if($type == 'per_day'){
-            $base_price = $this->price_per_day;
+            $base_price = $this->priceInMain('price_per_day');
             $period = periodDate($start_date_time,$end_date_time,true);
             foreach ($period as $dt) {
                 $allDates[$dt->format('Y-m-d')] = [
@@ -408,7 +408,7 @@ class Boat extends Bookable
                     if(empty($allDates[date('Y-m-d',strtotime($date->start_date))])) continue;
                     $allDates[date('Y-m-d',strtotime($date->start_date))] = [
                         'number'=>$date->number,
-                        'price'=>$date->price_per_day,
+                        'price'=>service_price_amount_in_main($date, 'price_per_day', $this),
                         'status'=>$date->active
                     ];
                 }
@@ -941,8 +941,8 @@ class Boat extends Bookable
             $data['is_instant'] = $this->is_instant;
 
             $data['number'] = $this->number;
-            $data['price_per_hour'] = $this->price_per_hour;
-            $data['price_per_day'] = $this->price_per_day;
+            $data['price_per_hour'] = $this->priceInMain('price_per_hour');
+            $data['price_per_day'] = $this->priceInMain('price_per_day');
 
             $data['default_state'] = $this->default_state;
             $data['booking_fee'] = setting_item_array('boat_booking_buyer_fees');

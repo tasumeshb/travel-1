@@ -102,7 +102,7 @@ class AvailabilityController extends FrontendController
             $date = [
                 'id'           => rand(0, 999),
                 'active'       => 0,
-                'price'        => (!empty($tour->sale_price) and $tour->sale_price > 0 and $tour->sale_price < $tour->price) ? $tour->sale_price : $tour->price,
+                'price'        => $tour->effectivePriceInMain(),
                 'is_default'   => true,
                 'textColor'    => '#2791fe',
             ];
@@ -135,6 +135,7 @@ class AvailabilityController extends FrontendController
                     $c_title = "";
                     foreach ($date['person_types'] as &$person) {
                         $person['name'] = !empty($person['name_' . $lang])?$person['name_' . $lang]:$person['name'];
+                        $person['price'] = service_amount_in_main($tour, $person['price']);
                         if (!$is_single) {
                             $c_title .= $person['name'] . ": " . format_money_main($person['price']) . "<br>";
                             //for single
@@ -166,10 +167,7 @@ class AvailabilityController extends FrontendController
                 $row->start = date('Y-m-d', strtotime($row->start_date));
                 $row->end = date('Y-m-d', strtotime($row->start_date));
                 $row->textColor = '#2791fe';
-                $price = $row->price;
-                if (empty($price)) {
-                    $price = (!empty($tour->sale_price) and $tour->sale_price > 0 and $tour->sale_price < $tour->price) ? $tour->sale_price : $tour->price;
-                }
+                $price = $row->price ? service_amount_in_main($tour, $row->price) : $tour->effectivePriceInMain();
                 if (!$is_single) {
                     $row->title_origin = $row->title = $row->event = format_money_main($price). "<br>". __('Max guests: ') . $row->max_guests;;
                 } else {
@@ -189,7 +187,7 @@ class AvailabilityController extends FrontendController
                         $c_title = "";
                         foreach ($list_person_types as $k => &$person) {
                             $person['name'] = !empty($person['name_' . $lang])?$person['name_' . $lang]:$person['name'];
-                            $person['price'] = $date_person_types[$k]['price'] ?? $person['price'];
+                            $person['price'] = service_amount_in_main($tour, $date_person_types[$k]['price'] ?? $person['price']);
                             $person['max'] = $date_person_types[$k]['max'] ?? $person['max'];
                             $person['min'] = $date_person_types[$k]['min'] ?? $person['min'];
                             if (!$is_single) {

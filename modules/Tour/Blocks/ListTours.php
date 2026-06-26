@@ -2,6 +2,7 @@
 namespace Modules\Tour\Blocks;
 
 use Modules\Template\Blocks\BaseBlock;
+use Modules\Template\Helpers\ListBlockHelper;
 use Modules\Tour\Models\Tour;
 use Modules\Tour\Models\TourCategory;
 use Modules\Location\Models\Location;
@@ -142,6 +143,7 @@ class ListTours extends BaseBlock
                         'pre_selected' => 1
                     ])
                 ],
+                ListBlockHelper::dailyRotationSetting(),
             ],
             'category'=>__("Service Tour")
         ];
@@ -174,7 +176,6 @@ class ListTours extends BaseBlock
 
     public function query($model){
         $listTour = $this->tourClass->search($model);
-        $limit = $model['number'] ?? 5;
-        return $listTour->paginate($limit);
+        return ListBlockHelper::paginateList($listTour, $model);
     }
 }

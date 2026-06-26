@@ -308,34 +308,57 @@
             return $this->belongsTo(User::class,'author_id');
         }
 
+        protected function priceCurrencyContext()
+        {
+            return $this;
+        }
+
+        public function priceInMain($field = 'price')
+        {
+            return service_price_amount_in_main($this, $field, $this->priceCurrencyContext());
+        }
+
+        public function effectivePriceInMain()
+        {
+            return service_effective_price_in_main($this, $this->priceCurrencyContext());
+        }
+
         public function getDisplayPriceAttribute()
         {
-            if (!empty($this->price) and $this->price > 0 and !empty($this->sale_price) and $this->sale_price > 0 and $this->price > $this->sale_price) {
-                return format_money($this->sale_price);
+            $price = $this->priceInMain('price');
+            $salePrice = $this->priceInMain('sale_price');
+            if (!empty($price) and $price > 0 and !empty($salePrice) and $salePrice > 0 and $price > $salePrice) {
+                return format_money($salePrice);
             }
-            return format_money($this->price);
+            return format_money($price);
         }
 
         public function getDisplayPriceAdminAttribute()
         {
-            if (!empty($this->price) and $this->price > 0 and !empty($this->sale_price) and $this->sale_price > 0 and $this->price > $this->sale_price) {
-                return format_money_main($this->sale_price);
+            $price = $this->priceInMain('price');
+            $salePrice = $this->priceInMain('sale_price');
+            if (!empty($price) and $price > 0 and !empty($salePrice) and $salePrice > 0 and $price > $salePrice) {
+                return format_money_main($salePrice);
             }
-            return format_money_main($this->price);
+            return format_money_main($price);
         }
 
         public function getDisplaySalePriceAttribute()
         {
-            if (!empty($this->price) and $this->price > 0 and !empty($this->sale_price) and $this->sale_price > 0 and $this->price > $this->sale_price) {
-                return format_money($this->price);
+            $price = $this->priceInMain('price');
+            $salePrice = $this->priceInMain('sale_price');
+            if (!empty($price) and $price > 0 and !empty($salePrice) and $salePrice > 0 and $price > $salePrice) {
+                return format_money($price);
             }
             return false;
         }
 
         public function getDisplaySalePriceAdminAttribute()
         {
-            if (!empty($this->price) and $this->price > 0 and !empty($this->sale_price) and $this->sale_price > 0 and $this->price > $this->sale_price) {
-                return format_money_main($this->price);
+            $price = $this->priceInMain('price');
+            $salePrice = $this->priceInMain('sale_price');
+            if (!empty($price) and $price > 0 and !empty($salePrice) and $salePrice > 0 and $price > $salePrice) {
+                return format_money_main($price);
             }
             return false;
         }

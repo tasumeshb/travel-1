@@ -265,7 +265,7 @@ class Tour extends Bookable
         $total = 0;
         $total_guests = 0;
         $discount = 0;
-        $base_price = ($this->sale_price and $this->sale_price > 0 and $this->sale_price < $this->price) ? $this->sale_price : $this->price;
+        $base_price = $this->effectivePriceInMain();
         // for Availability Calendar
         $base_price = $dataPriceAvailability['base_price'] ?? $base_price;
         $extra_price = [];
@@ -615,6 +615,7 @@ class Tour extends Bookable
                         $type['min'] = (int)$type['min'];
                         $type['max'] = (int)$type['max'];
                         $type['number'] = $type['min'];
+                        $type['price'] = service_amount_in_main($this, $type['price']);
                         $type['display_price'] = format_money($type['price']);
                     }
                     $booking_data['person_types'] = array_values((array)$booking_data['person_types']);
@@ -631,6 +632,7 @@ class Tour extends Bookable
                         }
                         $type['number'] = 0;
                         $type['enable'] = 0;
+                        $type['price'] = service_amount_in_main($this, $type['price']);
                         $type['price_html'] = format_money($type['price']);
                         $type['price_type'] = '';
                         switch ($type['type']) {

@@ -2,6 +2,7 @@
 namespace Modules\Boat\Blocks;
 
 use Modules\Template\Blocks\BaseBlock;
+use Modules\Template\Helpers\ListBlockHelper;
 use Modules\Boat\Models\Boat;
 use Modules\Location\Models\Location;
 
@@ -116,6 +117,7 @@ class ListBoat extends BaseBlock
                         'pre_selected' => 1
                     ])
                 ],
+                ListBlockHelper::dailyRotationSetting(),
             ],
             'category'=>__("Service Boat")
         ];
@@ -148,7 +150,6 @@ class ListBoat extends BaseBlock
 
     public function query($model){
         $listCar = $this->boatClass->search($model);
-        $limit = $model['number'] ?? 5;
-        return $listCar->paginate($limit);
+        return ListBlockHelper::paginateList($listCar, $model);
     }
 }

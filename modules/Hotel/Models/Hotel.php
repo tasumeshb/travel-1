@@ -312,8 +312,8 @@ class Hotel extends Bookable
 
             $this->bookingClass::clearDraftBookings();
             $booking->addMeta('duration', $this->duration);
-            $booking->addMeta('base_price', $this->price);
-            $booking->addMeta('sale_price', $this->sale_price);
+            $booking->addMeta('base_price', $this->priceInMain('price'));
+            $booking->addMeta('sale_price', $this->priceInMain('sale_price'));
             $booking->addMeta('guests', $total_guests);
             $booking->addMeta('adults', $request->input('adults'));
             $booking->addMeta('children', $request->input('children'));

@@ -62,6 +62,15 @@ class HotelRoom extends Bookable
         return $this->hasMany($this->hotelRoomTermClass, "target_id");
     }
 
+    protected function priceCurrencyContext()
+    {
+        if (!empty($this->parent_id)) {
+            return Hotel::select('id', 'price_currency')->find($this->parent_id);
+        }
+
+        return $this;
+    }
+
     public function isAvailableAt($filters = []){
 
         if(empty($filters['start_date']) or empty($filters['end_date'])) return true;
@@ -76,7 +85,7 @@ class HotelRoom extends Bookable
         foreach ($period as $dt){
             $allDates[$dt->format('Y-m-d')] = [
                 'number'=>$this->number,
-                'price'=>$this->price
+                'price'=>$this->priceInMain('price')
             ];
             $tmp_night++;
         }

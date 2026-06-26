@@ -197,7 +197,7 @@ class Event extends Bookable
         $extra_price_input = $request->input('extra_price');
         $ticket_types = [];
         $ticket_types_input = $request->input('ticket_types');
-        $base_price = ($this->sale_price and $this->sale_price > 0 and $this->sale_price < $this->price) ? $this->sale_price : $this->price;
+        $base_price = $this->effectivePriceInMain();
         if($this->getBookingType() == "ticket"){
             $ticketsAvailableBook = $this->getDataAvailableBooking($request->input("start_date"));
             if (!empty($ticketsAvailableBook)) {
@@ -544,8 +544,8 @@ class Event extends Bookable
             }
             $booking_data['ticket_types'] = $ticket_types;
         }
-        if ($time_slots = $this->getBookingTimeSlot() and $this->getBookingType() == "time_slot") {
-            $booking_data['booking_time_slots'] = $time_slots;
+        if ($this->getBookingType() == "time_slot") {
+            $booking_data['booking_time_slots'] = $this->getBookingTimeSlot();
         }
 
         if ($this->enable_extra_price) {
@@ -854,16 +854,16 @@ class Event extends Bookable
 
 		$allDates=[];
 		$service = $booking->service;
-        $period = periodDate($startDate,$endDate);
+        $period = periodDate($startDate, $endDate);
         foreach ($period as $dt){
-			$price = (!empty($service->sale_price) and $service->sale_price > 0 and $service->sale_price < $service->price) ? $service->sale_price : $service->price;
+			$price = $service->effectivePriceInMain();
 			$date['price'] =$price;
 			$date['price_html'] = format_money($price);
 			$date['from'] = $dt->getTimestamp();
 			$date['from_html'] = $dt->format('d/m/Y');
 			$date['to'] = $dt->getTimestamp();
 			$date['to_html'] = $dt->format('d/m/Y');
-			$allDates[date('Y-m-d',$i)] = $date;
+			$allDates[$dt->format('Y-m-d')] = $date;
 		}
 
 		if(!empty($rowDates))
@@ -1084,16 +1084,24 @@ class Event extends Bookable
 
     public function getBookingTimeSlot()
     {
-        $this->start_time = $this->start_time ?? "00:00";
-        $this->end_time = $this->end_time ?? "23:00";
-        $this->duration = $this->duration ?? "1";
-        $this->duration_unit = $this->duration_unit ?? "hour";
+        $this->start_time = !empty($this->start_time) ? $this->start_time : "00:00";
+        $this->end_time = !empty($this->end_time) ? $this->end_time : "23:00";
+        $duration = (int) ($this->duration ?: 1);
+        if ($duration < 1) {
+            $duration = 1;
+        }
+        $this->duration_unit = $this->duration_unit ?: "hour";
         $type_time = MINUTE_IN_SECONDS;
         if ($this->duration_unit == "hour") {
             $type_time = HOUR_IN_SECONDS;
         }
         $time_slots = [];
-        for ($i = strtotime($this->start_time); $i < strtotime($this->end_time); $i += ($type_time * $this->duration)) {
+        $start = strtotime($this->start_time);
+        $end = strtotime($this->end_time);
+        if ($start === false || $end === false || $start >= $end) {
+            return $time_slots;
+        }
+        for ($i = $start; $i < $end; $i += ($type_time * $duration)) {
             $time_slots[] = date('H:i', $i);
         }
         return $time_slots;

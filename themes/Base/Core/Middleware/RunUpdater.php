@@ -50,26 +50,29 @@ class RunUpdater
     public function handle($request, Closure $next)
     {
         if (strpos($request->path(), 'install') === false && file_exists(storage_path().'/installed') and !app()->runningInConsole()) {
-
-            $this->updateTo110();
-            $this->updateTo120();
-            $this->updateTo130();
-            $this->updateTo140();
-            $this->updateTo150();
-            $this->updateTo151();
-            $this->updateTo160();
-            $this->updateTo170();
-            $this->updateTo180();
-            $this->updateTo190();
-            $this->updateTo200();
-            $this->updateTo210();
-            $this->updateTo220();
-            $this->updateTo230();
-            $this->updateTo240();
-            Updater250::run();
-            Updater300::run();
-            Updater310::run();
-            Updater340::run();
+            try {
+                $this->updateTo110();
+                $this->updateTo120();
+                $this->updateTo130();
+                $this->updateTo140();
+                $this->updateTo150();
+                $this->updateTo151();
+                $this->updateTo160();
+                $this->updateTo170();
+                $this->updateTo180();
+                $this->updateTo190();
+                $this->updateTo200();
+                $this->updateTo210();
+                $this->updateTo220();
+                $this->updateTo230();
+                $this->updateTo240();
+                Updater250::run();
+                Updater300::run();
+                Updater310::run();
+                Updater340::run();
+            } catch (\Throwable $e) {
+                report($e);
+            }
         }
         return $next($request);
     }

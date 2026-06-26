@@ -26,10 +26,11 @@ class SetCurrentCurrency
     {
         if($code = $request->query('set_currency'))
         {
+            $code = strtolower((string) $code);
             $all = Currency::getActiveCurrency();
             if(!empty($all)){
                 foreach ($all as $item){
-                    if($item['currency_main'] == $code){
+                    if($item['currency_main'] === $code){
                         Session::put('bc_current_currency',$code);
                         $data = $request->query();
                         unset($data['set_currency']);

@@ -329,7 +329,7 @@
         public function getPriceInRanges($start_date, $end_date)
         {
             $totalPrice = 0;
-            $price = ($this->sale_price and $this->sale_price > 0 and $this->sale_price < $this->price) ? $this->sale_price : $this->price;
+            $price = $this->effectivePriceInMain();
 
             $datesRaw = $this->FlightDateClass::getDatesInRanges($start_date, $end_date, $this->id);
             $dates = [];
@@ -702,7 +702,7 @@
             }
 
             foreach ($period as $dt) {
-                $price = (!empty($service->sale_price) and $service->sale_price > 0 and $service->sale_price < $service->price) ? $service->sale_price : $service->price;
+                $price = $service->effectivePriceInMain();
 
                 $startDate = clone $dt;
 

@@ -2,6 +2,7 @@
 namespace Modules\News\Blocks;
 
 use Modules\Template\Blocks\BaseBlock;
+use Modules\Template\Helpers\ListBlockHelper;
 use Modules\News\Models\News;
 use Modules\News\Models\NewsCategory;
 
@@ -73,7 +74,8 @@ class ListNews extends BaseBlock
                             'name' => __("DESC")
                         ],
                     ]
-                ]
+                ],
+                ListBlockHelper::dailyRotationSetting(),
             ],
             'category'=>__("News")
         ]);
@@ -131,6 +133,10 @@ class ListNews extends BaseBlock
         $model_news->orderBy("core_news.".$model['order'], $model['order_by']);
         $model_news->where("core_news.status", "publish");
         $model_news->groupBy("core_news.id");
-        return $model_news->with(['category'])->limit($model['number'])->get();
+
+        return ListBlockHelper::limitList(
+            $model_news->with(['category']),
+            $model
+        );
     }
 }

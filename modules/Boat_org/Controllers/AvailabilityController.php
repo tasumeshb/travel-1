@@ -103,22 +103,24 @@ class AvailabilityController extends FrontendController{
         $rows =  $query->take(100)->get();
         $allDates = [];
         $period = periodDate($request->query('start'),$request->query('end'));
+        $pricePerHour = $boat->priceInMain('price_per_hour');
+        $pricePerDay = $boat->priceInMain('price_per_day');
 
         foreach ($period as $dt){
                 $i = $dt->getTimestamp();
             $date = [
                 'id'=>rand(0,999),
                 'active'=>0,
-                'price_per_hour'=>$boat->price_per_hour,
-                'price_per_day'=>$boat->price_per_day,
+                'price_per_hour'=>$pricePerHour,
+                'price_per_day'=>$pricePerDay,
                 'is_default'=>true,
                 'textColor'=>'#2791fe'
             ];
-            $date['price_html'] = __("per Hour: ").format_money($boat->price_per_hour);
-            $date['price_html'] .= "<br>".__("per Day: ").format_money($boat->price_per_day);
+            $date['price_html'] = __("per Hour: ").format_money($pricePerHour);
+            $date['price_html'] .= "<br>".__("per Day: ").format_money($pricePerDay);
             if(!$is_single) {
-                $date['price_html'] = __("Hour: ").format_money_main($boat->price_per_hour);
-                $date['price_html'] .= "<br>".__("Day: ").format_money_main($boat->price_per_day);
+                $date['price_html'] = __("Hour: ").format_money_main($pricePerHour);
+                $date['price_html'] .= "<br>".__("Day: ").format_money_main($pricePerDay);
             }
             $date['title'] = $date['event']  = $date['price_html'];
             $date['start'] = $date['end'] = date('Y-m-d',$i);
@@ -141,11 +143,13 @@ class AvailabilityController extends FrontendController{
                 $row->start = date('Y-m-d',strtotime($row->start_date));
                 $row->end = date('Y-m-d',strtotime($row->start_date));
                 $row->textColor = '#2791fe';
-                $row->price_html = __("per Hour: ").format_money($row->price_per_hour);
-                $row->price_html .= "<br>".__("per Day: ").format_money($row->price_per_day);
+                $rowHourPrice = service_price_amount_in_main($row, 'price_per_hour', $boat);
+                $rowDayPrice = service_price_amount_in_main($row, 'price_per_day', $boat);
+                $row->price_html = __("per Hour: ").format_money($rowHourPrice);
+                $row->price_html .= "<br>".__("per Day: ").format_money($rowDayPrice);
                 if(!$is_single) {
-                    $row->price_html = __("Hour: ").format_money_main($row->price_per_hour);
-                    $row->price_html .= "<br>".__("Day: ").format_money_main($row->price_per_day);
+                    $row->price_html = __("Hour: ").format_money_main($rowHourPrice);
+                    $row->price_html .= "<br>".__("Day: ").format_money_main($rowDayPrice);
                 }
                 $row->title = $row->event = $row->price_html;
                 if(!$row->active)

@@ -6,6 +6,12 @@
     $showCurrencySelect = $showCurrencySelect ?? false;
     $priceData = service_price_for_admin($row, $field);
     $currencyOptions = service_price_currency_options();
+    if ($showCurrencySelect && empty($row->price_currency)) {
+        $preferredCurrency = strtolower((string) setting_item('service_price_input_currency', 'inr'));
+        if (isset($currencyOptions[$preferredCurrency])) {
+            $priceData['currency'] = $preferredCurrency;
+        }
+    }
 @endphp
 <div class="{{ $colClass }}">
     <div class="form-group">

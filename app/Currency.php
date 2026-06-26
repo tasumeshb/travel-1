@@ -22,19 +22,34 @@ class Currency
     }
 
     public static function getActiveCurrency(){
-        $extra = [
-            [
-                'currency_main'=>setting_item('currency_main'),
-                'currency_format'=>setting_item('currency_format'),
-                'currency_thousand'=>setting_item('currency_thousand'),
-                'currency_no_decimal'=>setting_item('currency_no_decimal'),
-                'currency_decimal'=>setting_item('currency_decimal'),
-                'is_main'=>1,
-                'rate'=>1
-            ]
-        ];
-        $extra = array_merge(setting_item_array('extra_currency'),$extra);
-        return $extra;
+        $mainCode = strtolower((string) setting_item('currency_main'));
+        $mainEntry = static::normalizeCurrencyEntry([
+            'currency_main' => setting_item('currency_main'),
+            'currency_format' => setting_item('currency_format'),
+            'currency_thousand' => setting_item('currency_thousand'),
+            'currency_no_decimal' => setting_item('currency_no_decimal'),
+            'currency_decimal' => setting_item('currency_decimal'),
+            'is_main' => 1,
+            'rate' => 1,
+        ]);
+        $extras = array_values(array_filter(
+            setting_item_array('extra_currency'),
+            static function ($item) use ($mainCode) {
+                return strtolower((string) ($item['currency_main'] ?? '')) !== $mainCode;
+            }
+        ));
+        $extras = array_map([static::class, 'normalizeCurrencyEntry'], $extras);
+
+        return array_merge($extras, [$mainEntry]);
+    }
+
+    protected static function normalizeCurrencyEntry(array $item): array
+    {
+        if (!empty($item['currency_main'])) {
+            $item['currency_main'] = strtolower((string) $item['currency_main']);
+        }
+
+        return $item;
     }
 
     public static function getCurrent($need = 'currency_main',$default = '',$main_currency = false)
@@ -45,13 +60,24 @@ class Currency
         if($main_currency){
             $code = setting_item('currency_main');
         }
+        $code = strtolower((string) $code);
+
+        $mainCode = strtolower((string) setting_item('currency_main'));
+        if ($need === 'rate' && !$main_currency && $code === $mainCode) {
+            return 1;
+        }
 
         $active = static::getActiveCurrency();
 
         foreach ($active as $item){
-            if($code == $item['currency_main'])
+            if($code === $item['currency_main'])
             {
-                return $item[$need] ?? $default;
+                $value = $item[$need] ?? $default;
+                if ($need === 'currency_main') {
+                    return strtolower((string) $value);
+                }
+
+                return $value;
             }
         }
 

@@ -34,6 +34,7 @@
                         'site_desc',
                         'site_favicon',
                         'home_page_id',
+                        'list_items_daily_rotation',
                         'topbar_left_text',
                         'logo_id',
                         'footer_text_left',

@@ -2424,6 +2424,30 @@
                     margin: 0;
 
                 }
+
+                .list-item {
+                    .row {
+                        display: flex;
+                        flex-wrap: wrap;
+
+                        > [class*="col-"] {
+                            display: flex;
+                            margin-bottom: 30px;
+
+                            .item-loop {
+                                width: 100%;
+                                margin-bottom: 0;
+                                display: flex;
+                                flex-direction: column;
+                                height: 100%;
+
+                                .info {
+                                    margin-top: auto;
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             &.layout_carousel {

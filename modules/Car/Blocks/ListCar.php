@@ -2,6 +2,7 @@
 namespace Modules\Car\Blocks;
 
 use Modules\Template\Blocks\BaseBlock;
+use Modules\Template\Helpers\ListBlockHelper;
 use Modules\Car\Models\Car;
 use Modules\Location\Models\Location;
 
@@ -117,6 +118,7 @@ class ListCar extends BaseBlock
                         'pre_selected' => 1
                     ])
                 ],
+                ListBlockHelper::dailyRotationSetting(),
             ],
             'category'=>__("Service Car")
         ];
@@ -149,7 +151,6 @@ class ListCar extends BaseBlock
 
     public function query($model){
         $listCar = $this->carClass->search($model);
-        $limit = $model['number'] ?? 5;
-        return $listCar->paginate($limit);
+        return ListBlockHelper::paginateList($listCar, $model);
     }
 }

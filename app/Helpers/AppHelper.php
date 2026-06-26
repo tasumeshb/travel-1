@@ -93,6 +93,95 @@ function service_price_currency_code($row = null)
     return strtolower((string) ($row->price_currency ?? setting_item('currency_main', 'usd')));
 }
 
+/**
+ * Return a service price normalized to the site main currency.
+ * Prices should be stored in main currency; legacy rows may still hold local amounts.
+ */
+function service_price_amount_in_main($row, $field = 'price', $currencyContext = null)
+{
+    $amount = $row->{$field} ?? null;
+    if ($amount === '' || $amount === null) {
+        return 0.0;
+    }
+
+    $amount = (float) $amount;
+    if ($amount <= 0) {
+        return $amount;
+    }
+
+    $main = strtolower((string) setting_item('currency_main', 'usd'));
+    $context = $currencyContext ?? $row;
+    $currency = strtolower((string) ($context->price_currency ?? ''));
+    $legacyCurrency = strtolower((string) setting_item('service_price_input_currency', 'inr'));
+
+    $looksLikeUnconvertedLocal = function (float $value, string $localCurrency) use ($main): bool {
+        if ($localCurrency === '' || $localCurrency === $main) {
+            return false;
+        }
+
+        $rate = Currency::getExchangeRateForCurrency($localCurrency);
+        if ($rate <= 0) {
+            return false;
+        }
+
+        $asLocalIfStoredAsMain = $value / $rate;
+
+        // Large round local amounts (e.g. 54800 INR) stored without USD conversion.
+        if ($asLocalIfStoredAsMain > 500000 && $value > 30000) {
+            return true;
+        }
+
+        // price_currency set to INR but value still stored as INR, not USD.
+        if ($value > 10000 && $asLocalIfStoredAsMain > 100000) {
+            return true;
+        }
+
+        return false;
+    };
+
+    // price_currency set to a non-main currency — value should already be in main.
+    if ($currency !== '' && $currency !== $main) {
+        if ($looksLikeUnconvertedLocal($amount, $currency)) {
+            return Currency::convertFromCurrencyToMain($amount, $currency);
+        }
+
+        return $amount;
+    }
+
+    // price_currency empty or main — legacy local amounts may have been saved without conversion.
+    if ($legacyCurrency && $legacyCurrency !== $main) {
+        if ($looksLikeUnconvertedLocal($amount, $legacyCurrency)) {
+            return Currency::convertFromCurrencyToMain($amount, $legacyCurrency);
+        }
+    }
+
+    return $amount;
+}
+
+function service_effective_price_in_main($row, $currencyContext = null)
+{
+    $price = service_price_amount_in_main($row, 'price', $currencyContext);
+    $salePrice = service_price_amount_in_main($row, 'sale_price', $currencyContext);
+
+    if ($salePrice > 0 && $price > 0 && $salePrice < $price) {
+        return $salePrice;
+    }
+
+    return $price;
+}
+
+function service_amount_in_main($row, $amount, $currencyContext = null)
+{
+    $wrapper = (object) ['price' => $amount];
+
+    return service_price_amount_in_main($wrapper, 'price', $currencyContext ?? $row);
+}
+
+function format_service_money($row, $amount, $currencyContext = null)
+{
+    return format_money(service_amount_in_main($row, $amount, $currencyContext));
+}
+
 function service_price_for_admin($row, $field = 'price')
 {
     $currency = service_price_currency_code($row);
@@ -102,8 +191,22 @@ function service_price_for_admin($row, $field = 'price')
         return ['amount' => '', 'currency' => $currency];
     }
 
+    $mainAmount = service_price_amount_in_main($row, $field);
+
+    $storedCurrency = strtolower((string) ($row->price_currency ?? ''));
+    $main = strtolower((string) setting_item('currency_main', 'usd'));
+    $legacyCurrency = strtolower((string) setting_item('service_price_input_currency', 'inr'));
+
+    if (abs($mainAmount - (float) $stored) > 0.01) {
+        if ($storedCurrency !== '' && $storedCurrency !== $main) {
+            $currency = $storedCurrency;
+        } elseif ($legacyCurrency) {
+            $currency = $legacyCurrency;
+        }
+    }
+
     return [
-        'amount' => Currency::convertFromMainToCurrency((float) $stored, $currency),
+        'amount' => Currency::convertFromMainToCurrency($mainAmount, $currency),
         'currency' => $currency,
     ];
 }
@@ -985,7 +1088,7 @@ function get_currency_switcher_url($code = false){
 
     $request =  request();
     $data = $request->query();
-    $data['set_currency'] = $code;
+    $data['set_currency'] = $code ? strtolower((string) $code) : $code;
 
     $url = url()->current();
 

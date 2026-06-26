@@ -306,7 +306,7 @@ class Space extends Bookable
             $this->bookingClass::clearDraftBookings();
 
             $booking->addMeta('duration', $this->duration);
-            $booking->addMeta('base_price', $this->price);
+            $booking->addMeta('base_price', $this->priceInMain('price'));
             $booking->addMeta('sale_price', $this->sale_price);
             $booking->addMeta('guests', $total_guests);
             $booking->addMeta('adults', $request->input('adults'));
@@ -333,7 +333,7 @@ class Space extends Bookable
 
     public function getPriceInRanges($start_date,$end_date){
         $totalPrice = 0;
-        $price = ($this->sale_price and $this->sale_price > 0 and  $this->sale_price < $this->price) ? $this->sale_price : $this->price;
+        $price = $this->effectivePriceInMain();
 
         $datesRaw = $this->spaceDateClass::getDatesInRanges($start_date,$end_date,$this->id);
         $dates = [];
@@ -834,7 +834,7 @@ class Space extends Bookable
         }
 
         foreach ($period as $dt){
-            $price = (!empty($service->sale_price) and $service->sale_price > 0 and $service->sale_price < $service->price) ? $service->sale_price : $service->price;
+            $price = $service->effectivePriceInMain();
 
             $startDate = clone $dt;
 

@@ -141,11 +141,12 @@ class AvailabilityController extends FrontendController{
         $allDates = [];
 
         $period = periodDate($request->input('start'),$request->input('end'),false);
+        $roomPrice = $room->priceInMain('price');
         foreach ($period as $dt){
             $date = [
                 'id'=>rand(0,999),
                 'active'=>0,
-                'price'=> $room->price,
+                'price'=> $roomPrice,
                 'number'=> $room->number,
                 'is_instant'=>0,
                 'is_default'=>true,
@@ -168,10 +169,7 @@ class AvailabilityController extends FrontendController{
                 $row->start = date('Y-m-d',strtotime($row->start_date));
                 $row->end = date('Y-m-d',strtotime($row->start_date));
                 $row->textColor = '#2791fe';
-                $price = $row->price;
-                if(empty($price)){
-                    $price = $room->price;
-                }
+                $price = $row->price ? service_price_amount_in_main($row, 'price', $room) : $roomPrice;
                 $row->title = $row->event = format_money($price);
                 if(!$is_single){
                     $row->title = $row->event = format_money_main($price).' x '.$row->number;

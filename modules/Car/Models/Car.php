@@ -294,7 +294,7 @@ class Car extends Bookable
 
             $this->bookingClass::clearDraftBookings();
             $booking->addMeta('duration', $this->duration);
-            $booking->addMeta('base_price', $this->price);
+            $booking->addMeta('base_price', $this->priceInMain('price'));
             $booking->addMeta('sale_price', $this->sale_price);
             $booking->addMeta('extra_price', $extra_price);
             $booking->addMeta('tmp_dates', $this->tmp_dates);
@@ -377,7 +377,7 @@ class Car extends Bookable
         foreach ($period as $dt) {
             $allDates[$dt->format('Y-m-d')] = [
                 'number'=>$this->number,
-                'price'=>($this->sale_price && $this->sale_price < $this->price) ? $this->sale_price : $this->price,
+                'price'=> $this->effectivePriceInMain(),
                 'status'=>$this->default_state
             ];
         }
@@ -780,7 +780,7 @@ class Car extends Bookable
         $period = periodDate($startDate,$endDate);
         foreach ($period as $dt) {
 
-			$price = (!empty($service->sale_price) and $service->sale_price > 0 and $service->sale_price < $service->price) ? $service->sale_price : $service->price;
+			$price = $service->effectivePriceInMain();
 			$date['price'] =$price;
 			$date['price_html'] = format_money($price);
 			$date['from'] = $dt->getTimestamp();

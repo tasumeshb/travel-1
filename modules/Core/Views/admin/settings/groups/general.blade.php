@@ -128,6 +128,13 @@
                             ?>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" name="list_items_daily_rotation" value="1" @if(setting_item('list_items_daily_rotation')) checked @endif>
+                            {{ __('Rotate homepage list items every 24 hours') }}
+                        </label>
+                        <p class="help-block">{{ __('When enabled, service list blocks on the homepage show a different set of items each day. You can also override this on each list block in the page builder.') }}</p>
+                    </div>
                     @php do_action(\Modules\Core\Hook::CORE_SETTING_AFTER_HOMEPAGE) @endphp
                 </div>
             </div>

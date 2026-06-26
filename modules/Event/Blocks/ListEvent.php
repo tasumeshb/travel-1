@@ -2,6 +2,7 @@
 namespace Modules\Event\Blocks;
 
 use Modules\Template\Blocks\BaseBlock;
+use Modules\Template\Helpers\ListBlockHelper;
 use Modules\Event\Models\Event;
 use Modules\Location\Models\Location;
 
@@ -123,6 +124,7 @@ class ListEvent extends BaseBlock
                     'pre_selected' => 1
                 ])
             ],
+            ListBlockHelper::dailyRotationSetting(),
         ],
             'category'=>__("Service Event")
         ];
@@ -150,7 +152,6 @@ class ListEvent extends BaseBlock
 
     public function query($model){
         $listCar = $this->eventClass->search($model);
-        $limit = $model['number'] ?? 5;
-        return $listCar->paginate($limit);
+        return ListBlockHelper::paginateList($listCar, $model);
     }
 }

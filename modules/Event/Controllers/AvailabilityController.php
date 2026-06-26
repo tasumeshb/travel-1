@@ -103,14 +103,20 @@ class AvailabilityController extends FrontendController{
         $query->where('start_date','>=',date('Y-m-d H:i:s',strtotime($request->query('start'))));
         $query->where('end_date','<=',date('Y-m-d H:i:s',strtotime($request->query('end'))));
         $rows =  $query->take(50)->get();
+        $rangeStart = date('Y-m-d', strtotime($request->query('start')));
+        $rangeEnd = date('Y-m-d', strtotime($request->query('end')));
+        if ($rangeStart === '1970-01-01' || $rangeEnd === '1970-01-01') {
+            return $this->sendError(__('Invalid date range'));
+        }
+
         $allDates = [];
-        $period = periodDate($request->input('start'),$request->input('end'));
+        $period = periodDate($rangeStart, $rangeEnd);
         foreach ($period as $dt){
             $date = [
                 'id'=>rand(0,999),
                 'active'=>0,
                 'textColor'=>'#2791fe',
-                'price'=>(!empty($event->sale_price) and $event->sale_price > 0 and $event->sale_price < $event->price) ? $event->sale_price : $event->price,
+                'price'=>$event->effectivePriceInMain(),
             ];
             $date['start'] = $date['end'] = $dt->format('Y-m-d');
             if($event->default_state){
@@ -161,7 +167,11 @@ class AvailabilityController extends FrontendController{
         {
             foreach ($rows as $row)
             {
-                $ticketData = $allDates[date('Y-m-d',strtotime($row->start_date))];
+                $rowDate = date('Y-m-d', strtotime($row->start_date));
+                if (!isset($allDates[$rowDate])) {
+                    continue;
+                }
+                $ticketData = $allDates[$rowDate];
                 if ($row->ticket_types and $event->getBookingType() == "ticket") {
                     $list_ticket_types = $row->ticket_types;
                     $c_title = "";
@@ -205,14 +215,31 @@ class AvailabilityController extends FrontendController{
                     $ticketData['classNames'] = ['active-event'];
                     $ticketData['active'] = 1;
                 }
-                $allDates[date('Y-m-d',strtotime($row->start_date))] = $ticketData;
+                $allDates[$rowDate] = $ticketData;
             }
         }
         $bookings = $this->bookingClass::getAllBookingInRanges($event->id,$event->type,$request->query('start'),$request->query('end'));
         if(!empty($bookings))
         {
+            $windowStartTs = strtotime($rangeStart);
+            $windowEndTs = strtotime($rangeEnd);
+
             foreach ($bookings as $booking){
-                $period = periodDate($booking->start_date,$booking->end_date);
+                $bookingStartTs = strtotime($booking->start_date);
+                $bookingEndTs = strtotime($booking->end_date);
+
+                if ($bookingStartTs === false || $bookingEndTs === false) {
+                    continue;
+                }
+
+                if ($bookingStartTs > $windowEndTs || $bookingEndTs < $windowStartTs) {
+                    continue;
+                }
+
+                $clipStart = date('Y-m-d', max($bookingStartTs, $windowStartTs));
+                $clipEnd = date('Y-m-d', min($bookingEndTs, $windowEndTs));
+                $period = periodDate($clipStart, $clipEnd);
+
                 foreach ($period as $dt){
                     $date = $dt->format('Y-m-d');
                     if(isset($allDates[$date])){
@@ -288,7 +315,18 @@ class AvailabilityController extends FrontendController{
             }
         }
         $postData = $request->input();
-        $period = periodDate($request->input('start_date'),$request->input('end_date'));
+        $startDate = date('Y-m-d', strtotime($request->input('start_date')));
+        $endDate = date('Y-m-d', strtotime($request->input('end_date')));
+        if ($startDate === '1970-01-01' || $endDate === '1970-01-01') {
+            return $this->sendError(__('Invalid date range'));
+        }
+
+        $daySpan = (strtotime($endDate) - strtotime($startDate)) / 86400;
+        if ($daySpan > 366) {
+            return $this->sendError(__('Date range is too large'));
+        }
+
+        $period = periodDate($startDate, $endDate);
         foreach ($period as $dt){
 
             $date = $this->eventDateClass::where('start_date',$dt->format('Y-m-d'))->where('target_id',$target_id)->first();

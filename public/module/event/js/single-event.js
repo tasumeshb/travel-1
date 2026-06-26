@@ -33,18 +33,13 @@
             booking_type:"",
             booking_time_slots:"",
             select_start_time:[],
+
+            calendarFetchKey:'',
+            calendarFetching:false,
+            skipCalendarUpdate:false,
         },
         watch:{
             extra_price:{
-                handler:function f() {
-                    this.step = 1;
-                },
-                deep:true
-            },
-            start_date(){
-                this.step = 1;
-            },
-            ticket_types:{
                 handler:function f() {
                     this.step = 1;
                 },
@@ -71,6 +66,12 @@
                     }
                 }
                 me.select_start_time = [];
+            },
+            ticket_types:{
+                handler:function f() {
+                    this.step = 1;
+                },
+                deep:true
             },
         },
         computed:{
@@ -273,7 +274,17 @@
                         me.start_date_html = picker.startDate.format(bookingCore.date_format);
                     })
                     .on('update-calendar',function (e,obj) {
-                        me.fetchEvents(obj.leftCalendar.calendar[0][0], obj.leftCalendar.calendar[5][6])
+                        if (me.skipCalendarUpdate || !obj.leftCalendar || !obj.leftCalendar.calendar) {
+                            return;
+                        }
+                        var calendar = obj.leftCalendar.calendar;
+                        var start = calendar[0] && calendar[0][0];
+                        var endRow = calendar[5] ? calendar[5] : calendar[calendar.length - 1];
+                        var end = endRow ? endRow[endRow.length - 1] : null;
+                        if (!start || !end) {
+                            return;
+                        }
+                        me.fetchEvents(start, end);
                     });
             });
         },
@@ -282,13 +293,27 @@
             },
             fetchEvents(start,end){
                 var me = this;
+                if (!start || !end || typeof start.format !== 'function') {
+                    return;
+                }
+
+                var fetchKey = start.format('YYYY-MM-DD') + '|' + end.format('YYYY-MM-DD');
+                if (me.calendarFetching) {
+                    return;
+                }
+                if (me.calendarFetchKey === fetchKey && me.allEvents.length) {
+                    return;
+                }
+
+                me.calendarFetching = true;
+                me.calendarFetchKey = fetchKey;
+
                 var data = {
                     start: start.format('YYYY-MM-DD'),
                     end: end.format('YYYY-MM-DD'),
                     id:bravo_booking_data.id,
                     for_single:1
                 };
-                console.log(data);
 
                 $.ajax({
                     url: bravo_booking_i18n.load_dates_url,
@@ -301,16 +326,29 @@
                     success:function (json) {
                         me.allEvents = json;
                         var drp = $(me.$refs.start_date).data('daterangepicker');
+                        if (!drp) {
+                            return;
+                        }
                         drp.allEvents = json;
-                        drp.renderCalendar('left');
-                        if (!drp.singleDatePicker) {
-                            drp.renderCalendar('right');
+                        me.skipCalendarUpdate = true;
+                        try {
+                            drp.renderCalendar('left');
+                            if (!drp.singleDatePicker) {
+                                drp.renderCalendar('right');
+                            }
+                        } finally {
+                            me.skipCalendarUpdate = false;
                         }
                         $('.daterangepicker').removeClass("loading");
                     },
                     error:function (e) {
                         console.log(e);
                         console.log("Can not get availability");
+                        me.calendarFetchKey = '';
+                        $('.daterangepicker').removeClass("loading");
+                    },
+                    complete:function () {
+                        me.calendarFetching = false;
                     }
                 });
             },

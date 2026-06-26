@@ -2,6 +2,7 @@
 namespace Modules\Hotel\Blocks;
 
 use Modules\Template\Blocks\BaseBlock;
+use Modules\Template\Helpers\ListBlockHelper;
 use Modules\Hotel\Models\Hotel;
 use Modules\Location\Models\Location;
 
@@ -130,6 +131,7 @@ class ListHotel extends BaseBlock
                         'pre_selected' => 1
                     ])
                 ],
+                ListBlockHelper::dailyRotationSetting(),
             ],
             'category'=>__("Service Hotel")
         ];
@@ -157,7 +159,6 @@ class ListHotel extends BaseBlock
 
     public function query($model){
         $hotelClass = $this->hotelClass->search($model);
-        $limit = $model['number'] ?? 5;
-        return $hotelClass->paginate($limit);
+        return ListBlockHelper::paginateList($hotelClass, $model);
     }
 }

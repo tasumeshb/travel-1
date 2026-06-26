@@ -27,3 +27,8 @@ storage/bc.php
 storage/installed
 public/themes/*/dist
 /.history
+/storage/logs
+/storage/debugbar
+/storage/framework/cache/
+/storage/framework/sessions/
+/storage/framework/views/

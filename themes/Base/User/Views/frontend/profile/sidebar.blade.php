@@ -35,18 +35,40 @@
     </ul>
     @endif
     @if(setting_item('vendor_show_email') or setting_item('vendor_show_phone'))
+    @php
+        $addressLines = array_filter([
+            $user->address ?? null,
+            $user->address2 ?? null,
+            $user->city ?? null,
+            $user->state ?? null,
+        ], fn ($line) => filled(trim((string) $line)));
+        $fullAddress = !empty($addressLines) ? implode(', ', $addressLines) : '';
+        $googleLocationUrl = $fullAddress !== ''
+            ? 'https://www.google.com/search?q=' . rawurlencode($fullAddress)
+            : null;
+
+        $showEmail = setting_item('vendor_show_email') && $user->email;
+        $showPhone = setting_item('vendor_show_phone') && $user->phone;
+        $showWhatsapp = setting_item('vendor_show_phone') && ($user->whatsapp_code || $user->whatsapp);
+        $showAddress = !empty($addressLines) && $googleLocationUrl;
+    @endphp
     <hr>
+    @if($showEmail)
     <ul class="meta-info style1">
-        @if(setting_item('vendor_show_email') && $user->email)
         <li class="user_email">
             <span class="label">{{__('Email:')}}</span>
             <span class="val">
                 <a href="mailto:{{ $user->email }}">{{ $user->email }}</a>
             </span>
         </li>
-        @endif
+    </ul>
+    @endif
 
-        @if(setting_item('vendor_show_phone') && $user->phone)
+    @if($showPhone)
+        @if($showEmail)
+        <hr class="profile-contact-divider">
+        @endif
+    <ul class="meta-info style1">
         <li class="user_phone">
             <span class="label">{{__('Phone:')}}</span>
             <span class="val">
@@ -56,9 +78,7 @@
                 ])
             </span>
         </li>
-        @endif
-
-        @if(setting_item('vendor_show_phone') && ($user->whatsapp_code || $user->whatsapp))
+        @if($showWhatsapp)
         <li class="user_whatsapp">
             <span class="label">{{__('Whatsapp:')}}</span>
             <span class="val">
@@ -71,20 +91,31 @@
             </span>
         </li>
         @endif
+    </ul>
+    @elseif($showWhatsapp)
+        @if($showEmail)
+        <hr class="profile-contact-divider">
+        @endif
+    <ul class="meta-info style1">
+        <li class="user_whatsapp">
+            <span class="label">{{__('Whatsapp:')}}</span>
+            <span class="val">
+                @php $waDigits = phone_intl_digits(phone_intl_whatsapp_e164($user->whatsapp_code, $user->whatsapp)); @endphp
+                @include('Layout::parts.phone-display', [
+                    'whatsapp_code' => $user->whatsapp_code,
+                    'whatsapp' => $user->whatsapp,
+                    'href' => $waDigits ? 'https://wa.me/' . $waDigits : null,
+                ])
+            </span>
+        </li>
+    </ul>
+    @endif
 
-        @php
-            $addressLines = array_filter([
-                $user->address ?? null,
-                $user->address2 ?? null,
-                $user->city ?? null,
-                $user->state ?? null,
-            ], fn ($line) => filled(trim((string) $line)));
-            $fullAddress = !empty($addressLines) ? implode(', ', $addressLines) : '';
-            $googleLocationUrl = $fullAddress !== ''
-                ? 'https://www.google.com/search?q=' . rawurlencode($fullAddress)
-                : null;
-        @endphp
-        @if(!empty($addressLines) && $googleLocationUrl)
+    @if($showAddress)
+        @if($showEmail || $showPhone || $showWhatsapp)
+        <hr class="profile-contact-divider">
+        @endif
+    <ul class="meta-info style1">
         <li class="user_address">
             <span class="label">{{__('Address:')}}</span>
             <span class="val">
@@ -93,23 +124,23 @@
                 </a>
             </span>
         </li>
-        @endif
-    </ul> 
+    </ul>
+    @endif
     <div class="profile-social-links">
         @if($user->facebook != NULL)
-        <a href="{{$user->facebook??'#'}}" class="p-1" target="_blank"><i class="fa fa-facebook"></i></a>
+        <a href="{{$user->facebook??'#'}}" class="social-link social-facebook" target="_blank" rel="noopener noreferrer"><i class="fa fa-facebook"></i></a>
         @endif
         @if($user->youtube != NULL)
-        <a href="{{$user->youtube??'#'}}" class="p-1"target="_blank"><i class="fa fa-youtube"></i></a>
+        <a href="{{$user->youtube??'#'}}" class="social-link social-youtube" target="_blank" rel="noopener noreferrer"><i class="fa fa-youtube"></i></a>
         @endif
         @if($user->twitter != NULL)
-        <a href="{{$user->twitter??'#'}}" class="p-1"target="_blank"><i class="fa fa-twitter"></i></a>
+        <a href="{{$user->twitter??'#'}}" class="social-link social-twitter" target="_blank" rel="noopener noreferrer"><i class="fa fa-twitter"></i></a>
         @endif
         @if($user->linkedin != NULL)
-        <a href="{{$user->linkedin??'#'}}" class="p-1"target="_blank"><i class="fa fa-linkedin"></i></a>
+        <a href="{{$user->linkedin??'#'}}" class="social-link social-linkedin" target="_blank" rel="noopener noreferrer"><i class="fa fa-linkedin"></i></a>
         @endif
         @if($user->instagram != NULL)
-        <a href="{{$user->instagram??'#'}}" class="p-1"target="_blank"><i class="fa fa-instagram"></i></a>
+        <a href="{{$user->instagram??'#'}}" class="social-link social-instagram" target="_blank" rel="noopener noreferrer"><i class="fa fa-instagram"></i></a>
         @endif
     </div>
    
